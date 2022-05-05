@@ -19,12 +19,17 @@ public class ApiService
         _linkRepository = linkRepository;
     }
 
-    public IEnumerable<PersonDto>? GetPersons(string? name = null, bool? includeAllData = false, int? take = null)
+    public IEnumerable<PersonDto>? GetPersons(PageParameters pageParameters, string? name = null, bool? includeAllData = false)
     {
         var query = name is null ? _personRepository.Query
-            : _personRepository.Query.Where(p => p.Name.Contains(name)).Select(p => p);
+                .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)
+                .Take(pageParameters.PageSize)
+            : _personRepository.Query.Where(p => p.Name.Contains(name)).Select(p => p)
+                .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)
+                .Take(pageParameters.PageSize);
 
-        if(includeAllData is true)
+
+        if (includeAllData is true)
             query = query.Include(x => x.Interests)!
                 .ThenInclude(x => x.Links);
 

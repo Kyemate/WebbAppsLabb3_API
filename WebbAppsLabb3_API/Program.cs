@@ -1,7 +1,10 @@
 using Domain;
 using Domain.Models;
 using Domain.Repositories;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Service;
 using Service.Models;
 using Service.Services;
 using WebbAppsLabb3_API.EndpointDefinitions;
@@ -42,9 +45,9 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 
 
-app.MapGet("/persons", (ApiService apiService) => apiService.GetPersons());
+app.MapGet("/persons", (int page, int pageSize, ApiService apiService) => apiService.GetPersons(new PageParameters(page, pageSize)));
 
-app.MapGet("/persons/{name}", (string name, bool? includeAll, int? take, ApiService apiService) => apiService.GetPersons(name, includeAll, take));
+app.MapGet("/persons/{name}", (int page, int pageSize, string name, bool? includeAll, ApiService apiService) => apiService.GetPersons(new PageParameters(page, pageSize), name, includeAll));
 
 app.MapGet("/interests/{personId}", (int personId, ApiService apiService) => apiService.GetInterestsByPerson(personId));
 
