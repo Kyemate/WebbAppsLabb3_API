@@ -1,7 +1,6 @@
 global using Service.Services;
 global using Service.Models;
 using Domain;
-using Domain.Models;
 using Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using WebbAppsLabb3_API.EndpointDefinitions;
